@@ -84,7 +84,7 @@ const ReviewForm = () => {
 
   return (
     <div className="min-h-screen w-full px-10 py-6 bg-red-100 pt-20">
-      <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">
+      <h2 className="text-2xl font-bold mb-6 text-center text-blue-800">
         ✍️ Submit Your Review
       </h2>
 
@@ -146,7 +146,7 @@ const ReviewForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 w-full md:w-auto"
+          className="bg-transparent text-lg hover:underline border-none text-black px-5 py-2 rounded w-full md:w-auto"
         >
           {loading ? "Submitting..." : "Submit Review"}
         </button>

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BookCard from "../components/BookCard";
 import { motion } from "framer-motion";
+
 const API = import.meta.env.VITE_API_URL;
 
 const BookDetail = () => {
@@ -12,6 +13,9 @@ const BookDetail = () => {
   const [reviews, setReviews] = useState([]);
   const [relatedBooks, setRelatedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const reviewSectionRef = useRef(null);
+  const relatedSectionRef = useRef(null);
 
   useEffect(() => {
     fetchBookDetails();
@@ -51,11 +55,21 @@ const BookDetail = () => {
     }
   };
 
-  if (loading)
-    return <p className="text-center py-8">Loading book details...</p>;
+  const scrollToReviews = () => {
+    if (reviewSectionRef.current) {
+      reviewSectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const scrollToRelated = () => {
+    if (relatedSectionRef.current) {
+      relatedSectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  if (loading) return <p className="text-center py-8">Loading book details...</p>;
   if (!book) return <p className="text-center py-8">Book not found.</p>;
 
- 
   const BookInfo = () => (
     <>
       <h2 className="text-black font-bold mb-2" style={{ fontSize: "2rem" }}>
@@ -71,33 +85,10 @@ const BookDetail = () => {
     </>
   );
 
- 
-  const ActionButtons = () => (
-    <div className="flex flex-col sm:flex-row gap-3 mt-6">
-      <button
-        onClick={() => navigate(`/books/${id}/review`, { state: { book } })}
-        className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
-      >
-        ➕ Add Your Review
-      </button>
-      <button
-        onClick={() => alert("Download started (dummy)")}
-        className="bg-gray-200 text-black py-2 rounded hover:bg-gray-300 w-full sm:w-auto"
-      >
-        ⬇️ Download Book
-      </button>
-      <button
-        onClick={() => alert("Book added to favorites (dummy)")}
-        className="bg-gray-200 text-black py-2 rounded hover:bg-gray-300 w-full sm:w-auto"
-      >
-        📌 Bookmark
-      </button>
-    </div>
-  );
-
   
+
   const ReviewsSection = () => (
-    <section className="mt-10">
+    <section className="mt-10" ref={reviewSectionRef}>
       <h3 className="text-xl font-semibold text-red-800 mb-3">📢 Reviews</h3>
       {reviews.length > 0 ? (
         <div className="space-y-4">
@@ -116,73 +107,168 @@ const BookDetail = () => {
     </section>
   );
 
- 
   const RelatedBooksSection = () => (
-    <section className="mt-10">
+    <section className="mt-10" ref={relatedSectionRef}>
       <h3 className="text-xl font-semibold text-red-800 mb-3">📚 Related Books</h3>
       {relatedBooks.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {relatedBooks.map((b) => (
-            <BookCard key={b._id} book={b} />
+        <motion.div
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.1 } },
+          }}
+        >
+          {relatedBooks.map((book) => (
+            <motion.div
+              key={book._id}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+              }}
+            >
+              <BookCard book={book} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       ) : (
         <p className="text-gray-500">No related books found.</p>
       )}
     </section>
   );
+const MobileView = () => (
+  <motion.div
+    className="block md:hidden min-h-screen w-full px-4 py-6 bg-red-100 pt-20 max-w-[90vw] mx-auto"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.6 }}
+  >
+    
+    <img
+      src={book.coverImage}
+      alt={book.title}
+      className="w-full rounded-lg shadow-md mb-4 object-cover"
+    />
 
-  
-  const MobileView = () => (
+   
+    <h2 className="text-black font-bold mb-2 text-xl">{book.title}</h2>
+    <p className="text-gray-700 mb-1"><strong>Author:</strong> {book.author}</p>
+    <p className="text-gray-700 mb-1"><strong>Genre:</strong> {book.genre}</p>
+    <p className="text-gray-700 mb-1"><strong>Published Year:</strong> {book.publishedYear}</p>
+    <p className="text-gray-700 mb-1"><strong>Language:</strong> {book.language}</p>
+    <p className="text-gray-700 mb-1"><strong>Pages:</strong> {book.pages}</p>
+    <p className="text-yellow-600 font-semibold mb-2">⭐ { book.rating?.toFixed(1) || "No rating yet"}</p>
+
+    
+    <div className="grid grid-cols-2 gap-2 mb-4">
+      <button
+        onClick={() => navigate(`/books/${id}/review`, { state: { book } })}
+        className="text-black bg-white py-2 rounded shadow text-sm"
+      >
+        ➕ Review
+      </button>
+      <button
+        onClick={() => alert("Download started (dummy)")}
+        className="text-black bg-white py-2 rounded shadow text-sm"
+      >
+        ⬇️ Download
+      </button>
+      <button
+        onClick={() => alert("Book added to favorites (dummy)")}
+        className="text-black bg-white py-2 rounded shadow text-sm"
+      >
+        📌 Bookmark
+      </button>
+      <button
+        onClick={scrollToReviews}
+        className="text-blue-600 bg-white py-2 rounded shadow text-sm"
+      >
+        👀 Reviews
+      </button>
+      <button
+        onClick={scrollToRelated}
+        className="text-green-600 bg-white py-2 rounded shadow text-sm col-span-2"
+      >
+        📚 Related Books
+      </button>
+    </div>
+
+    
+    <p className="text-gray-800 mb-4">{book.description}</p>
+
+    <ReviewsSection />
+    <RelatedBooksSection />
+  </motion.div>
+);
+
+
+  const DesktopView = () => (
+  <motion.div
+    className="hidden md:block min-h-screen w-full px-10 py-6 bg-red-100 pt-20"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.6 }}
+  >
     <motion.div
-      className="block md:hidden min-h-screen w-full px-4 py-6 bg-red-100 pt-20 max-w-[90vw] mx-auto"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      className="flex flex-row gap-6"
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.2 }}
     >
-      <img
+      
+      <motion.img
         src={book.coverImage}
         alt={book.title}
-        className="w-full rounded-lg shadow-md mb-4 object-cover"
+        className="w-[30%] object-cover rounded-lg shadow-md"
+        whileHover={{ scale: 1.05 }}
       />
 
-      <BookInfo />
-      <ActionButtons />
-      <ReviewsSection />
-      <RelatedBooksSection />
-    </motion.div>
-  );
+      
+      <div className="flex-1">
+        <BookInfo />
+      </div>
 
-  
-  const DesktopView = () => (
-    <motion.div
-      className="hidden md:block min-h-screen w-full px-10 py-6 bg-red-100 pt-20"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
-    >
-      <motion.div
-        className="flex flex-row gap-6"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        <motion.img
-          src={book.coverImage}
-          alt={book.title}
-          className="w-1/3 object-cover rounded-lg shadow-md"
-          whileHover={{ scale: 1.05 }}
-        />
-        <div className="flex-1 flex flex-col">
-          <BookInfo />
-          <ActionButtons />
-        </div>
-      </motion.div>
-
-      <ReviewsSection />
-      <RelatedBooksSection />
+     
+      <div className="flex flex-col gap-3 min-w-[160px] items-start">
+        <button
+          onClick={() => navigate(`/books/${id}/review`, { state: { book } })}
+          className="text-black bg-transparent border-none hover:text-blue-600"
+        >
+          ➕ Add Your Review
+        </button>
+        <button
+          onClick={() => alert("Download started (dummy)")}
+          className="text-black bg-transparent border-none hover:text-blue-600"
+        >
+          ⬇️ Download Book
+        </button>
+        <button
+          onClick={() => alert("Book added to favorites (dummy)")}
+          className="text-black  bg-transparent border-none hover:text-blue-600"
+        >
+          📌 Bookmark
+        </button>
+        <button
+          onClick={scrollToReviews}
+          className="text-blue-600 bg-transparent border-none underline"
+        >
+          👀 View Reviews
+        </button>
+        <button
+          onClick={scrollToRelated}
+          className="text-green-600 bg-transparent border-none underline"
+        >
+          📚 View Related Books
+        </button>
+      </div>
     </motion.div>
-  );
+
+   
+    <ReviewsSection />
+    <RelatedBooksSection />
+  </motion.div>
+);
 
   return (
     <>
@@ -193,6 +279,7 @@ const BookDetail = () => {
 };
 
 export default BookDetail;
+
 
 
 

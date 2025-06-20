@@ -115,7 +115,7 @@ const Navbar = () => {
         
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="text-purple-600 focus:outline-none p-1 bg-transparent  hover:outline-none border-none"
+          className="text-purple-600  p-1 focus:outline-none bg-transparent  hover:outline-none border-none"
           aria-label="Toggle menu"
           style={{ width: "36px", height: "36px" }}
         >
