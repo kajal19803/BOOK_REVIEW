@@ -6,7 +6,6 @@ const API = import.meta.env.VITE_API_URL;
 const Navbar = () => {
   const navigate = useNavigate();
 
-  
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("userInfo");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -25,6 +24,7 @@ const Navbar = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [enteredOtp, setEnteredOtp] = useState("");
   const [registeredEmail, setRegisteredEmail] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
@@ -32,42 +32,38 @@ const Navbar = () => {
     setIsLoggedIn(false);
     setUser(null);
     navigate("/");
+    setMenuOpen(false);
   };
 
- const handleLoginSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post(`${API}/api/users/login`, {
-      email: formData.email,
-      password: formData.password,
-    });
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${API}/api/users/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
 
-    const token = res.data.token;
-    localStorage.setItem("userToken", token);
-    localStorage.setItem("userInfo", JSON.stringify(res.data.user));
-    setUser(res.data.user);
-    setIsLoggedIn(true);
-    setShowModal(false);
-    setFormData({ name: "", email: "", password: "", confirmPassword: "" });
-    setError("");
+      const token = res.data.token;
+      localStorage.setItem("userToken", token);
+      localStorage.setItem("userInfo", JSON.stringify(res.data.user));
+      setUser(res.data.user);
+      setIsLoggedIn(true);
+      setShowModal(false);
+      setFormData({ name: "", email: "", password: "", confirmPassword: "" });
+      setError("");
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-    
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      setMenuOpen(false); 
+      if (res.data.user.isAdmin) {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/");
+      }
 
-   
-    if (res.data.user.isAdmin) {
-      navigate("/admin/dashboard");
-    } else {
-      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
     }
-
-  } catch (err) {
-    setError(err.response?.data?.message || "Login failed");
-  }
-};
-
-
-
+  };
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
@@ -114,38 +110,83 @@ const Navbar = () => {
     <>
       <nav className="bg-purple-50 fixed top-0 w-full shadow-md px-4 md:px-10 py-4 flex justify-between items-center z-50">
         <Link to="/" className="text-2xl font-serif-bold text-purple-600">📚 BookVerse</Link>
-        <div className="flex gap-6 items-center text-lg md:text-base">
-          <Link to="/" className="hover:text-black font-medium">Home</Link>
-          <Link to="/books" className="hover:text-black font-medium">Browse</Link>
 
-         {isLoggedIn && user ? (
+        
+        <button
+          className="md:hidden text-purple-600 focus:outline-none"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          
+          <svg
+            className="w-6 h-6 leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            viewBox="0 0 24 24"
+          >
+            {menuOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" /> 
+            ) : (
+              <path d="M3 12h18M3 6h18M3 18h18" /> 
+            )}
+          </svg>
+        </button>
+
+        
+        <div
+          className={`flex flex-col md:flex-row md:items-center gap-6 text-lg md:text-base absolute md:static top-full left-0 w-full md:w-auto bg-purple-50 md:bg-transparent px-4 md:px-0 py-4 md:py-0 shadow-md md:shadow-none transition-transform duration-300 ease-in-out
+          ${menuOpen ? "translate-y-0" : "-translate-y-[120%] md:translate-y-0"}`}
+          style={{ zIndex: 999 }}
+        >
+          <Link
+            to="/"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-black font-medium leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
+          >
+            Home
+          </Link>
+          <Link
+            to="/books"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-black font-medium leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
+          >
+            Browse
+          </Link>
+
+          {isLoggedIn && user ? (
             <>
               <Link
-                 to={user.isAdmin ? "/admin/dashboard" : `${API}/users/${user._id}`}
-                 className="hover:text-blue-600 font-medium"
+                to={user.isAdmin ? "/admin/dashboard" : `/users/${user._id}`}
+                onClick={() => setMenuOpen(false)}
+                className="hover:text-blue-600 font-medium"
               >
-              My Profile
-             </Link>
-             <button
-              onClick={handleLogout}
-              className="bg-transparent text-red-800 px-3 py-1 rounded  text-lg"
-             >
-              Logout
-             </button>
-             </>
-             ) : (
-             <button
-              onClick={() => setShowModal(true)}
-             className="bg-transparent text-black px-4 py-1.5 rounded "
-             >
-                Login / Register
+                My Profile
+              </Link>
+              <button
+                onClick={handleLogout}
+                className=" text-red-800 px-3 py-1 rounded text-lg leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => {
+                setShowModal(true);
+                setMenuOpen(false);
+              }}
+              className="text-black px-4 py-1.5 rounded leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
+            >
+              Login / Register
             </button>
           )}
-
         </div>
       </nav>
 
-     
+      
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-purple-100 p-6 rounded-lg shadow-lg w-full max-w-md relative">
@@ -161,7 +202,6 @@ const Navbar = () => {
               ✖
             </button>
 
-           
             <div className="flex justify-center mb-4">
               <button
                 onClick={() => {
@@ -169,11 +209,11 @@ const Navbar = () => {
                   setError("");
                   setOtpSent(false);
                 }}
-                className={`px-4 py-2 font-semibold leading-none p-0 m-0 bg-transparent border-none focus:outline-none ${activeTab === "login"
-                  ? "text-blue-600  bg-white leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
-                  : "text-gray-600 bg-white leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
-
-                  }`}
+                className={`px-4 py-2 font-semibold leading-none p-0 m-0 bg-transparent border-none focus:outline-none ${
+                  activeTab === "login"
+                    ? "text-blue-600"
+                    : "text-gray-600"
+                }`}
               >
                 Login
               </button>
@@ -183,19 +223,20 @@ const Navbar = () => {
                   setError("");
                   setOtpSent(false);
                 }}
-                className={`px-4 py-2 font-semibold leading-none p-0 m-0 bg-transparent border-none focus:outline-none ${activeTab === "register"
-                  ? "text-blue-600 bg-white  leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
-                  : "text-gray-600 bg-white leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
-                  }`}
+                className={`px-4 py-2 font-semibold leading-none p-0 m-0 bg-transparent border-none focus:outline-none ${
+                  activeTab === "register"
+                    ? "text-blue-600"
+                    : "text-gray-600"
+                }`}
               >
                 Register
               </button>
             </div>
 
-           
-            {error && <p className="text-red-500 text-sm mb-3 text-center">{error}</p>}
+            {error && (
+              <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
+            )}
 
-            
             {activeTab === "login" && (
               <form onSubmit={handleLoginSubmit} className="space-y-4">
                 <input
@@ -223,7 +264,6 @@ const Navbar = () => {
               </form>
             )}
 
-           
             {activeTab === "register" && !otpSent && (
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
                 <input
@@ -267,7 +307,6 @@ const Navbar = () => {
               </form>
             )}
 
-           
             {otpSent && (
               <div className="space-y-3">
                 <p className="text-gray-700 text-sm">
@@ -296,10 +335,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-
-
-
-
-

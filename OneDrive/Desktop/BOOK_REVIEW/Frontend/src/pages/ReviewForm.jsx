@@ -4,7 +4,7 @@ import axios from "axios";
 const API = import.meta.env.VITE_API_URL;
 
 const ReviewForm = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const { state } = useLocation();
   const book = state?.book;
   const [rating, setRating] = useState(5);
@@ -73,8 +73,9 @@ const ReviewForm = () => {
       ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
       : null;
 
-  return (
-    <div className="min-h-screen w-screen px-4 py-6 md:px-10 bg-red-100 pt-20">
+  // Shared content (book info + form + reviews) in a function to avoid repetition
+  const Content = () => (
+    <>
       <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">
         ✍️ Submit Your Review
       </h2>
@@ -84,43 +85,57 @@ const ReviewForm = () => {
           <img
             src={book.coverImage}
             alt={book.title}
-            className="w-full md:w-1/4 rounded shadow-md"
+            className="w-full max-w-xs md:w-1/4 rounded shadow-md object-contain"
           />
-          <div>
+          <div className="flex-1">
             <h3 className="text-xl text-black font-semibold">{book.title}</h3>
-            <p className="text-gray-700 mb-1"><strong>Author:</strong> {book.author}</p>
-          <p className="text-gray-700 mb-1"><strong>Genre:</strong> {book.genre}</p>
-          <p className="text-gray-700 mb-1"><strong>Published Year:</strong> {book.publishedYear}</p>
-          <p className="text-gray-700 mb-1"><strong>Language:</strong> {book.language}</p>
-          <p className="text-gray-700 mb-1"><strong>Pages:</strong> {book.pages}</p>
-          <p className="text-yellow-600 font-semibold">
-            ⭐ {book.rating?.toFixed(1) || "No rating yet"}
-          </p>
+            <p className="text-gray-700 mb-1">
+              <strong>Author:</strong> {book.author}
+            </p>
+            <p className="text-gray-700 mb-1">
+              <strong>Genre:</strong> {book.genre}
+            </p>
+            <p className="text-gray-700 mb-1">
+              <strong>Published Year:</strong> {book.publishedYear}
+            </p>
+            <p className="text-gray-700 mb-1">
+              <strong>Language:</strong> {book.language}
+            </p>
+            <p className="text-gray-700 mb-1">
+              <strong>Pages:</strong> {book.pages}
+            </p>
+            <p className="text-yellow-600 font-semibold">
+              ⭐ {book.rating?.toFixed(1) || "No rating yet"}
+            </p>
           </div>
         </div>
       )}
 
-      
       <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-4">
         {error && <p className="text-red-500 text-sm">{error}</p>}
         {success && <p className="text-green-600 text-sm">{success}</p>}
 
-        <label className="block text-sm  font-medium text-gray-700">Rating:</label>
+        <label className="block text-sm font-medium text-gray-700">Rating:</label>
         <select
           value={rating}
           onChange={(e) => setRating(Number(e.target.value))}
           className="w-full border bg-white text-black px-3 py-2 rounded focus:outline-none"
         >
-            {[5, 4, 3, 2, 1].map((r) => {
-            const labels = { 5: "Excellent 🌟",4: "Very Good 😊",3: "Good 🙂",2: "Fair 😐",1: "Poor 😞",};
-        return (
-           <option key={r} value={r}>
-           {r} - {labels[r]}
-           </option>
-             );
-         })}
-       </select>
-
+          {[5, 4, 3, 2, 1].map((r) => {
+            const labels = {
+              5: "Excellent 🌟",
+              4: "Very Good 😊",
+              3: "Good 🙂",
+              2: "Fair 😐",
+              1: "Poor 😞",
+            };
+            return (
+              <option key={r} value={r}>
+                {r} - {labels[r]}
+              </option>
+            );
+          })}
+        </select>
 
         <label className="block text-sm font-medium text-gray-700">Comment:</label>
         <textarea
@@ -135,28 +150,28 @@ const ReviewForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 w-full md:w-auto"
         >
           {loading ? "Submitting..." : "Submit Review"}
         </button>
       </form>
 
-     
       {reviews.length > 0 && (
         <div className="mt-10 max-w-2xl mx-auto">
           <h3 className="text-xl font-semibold text-gray-800 mb-2">📚 Reviews:</h3>
 
           <div className="mb-4 text-sm text-gray-700">
             Average Rating:{" "}
-            <span className="text-yellow-600 font-semibold">
-              {averageRating} ⭐
-            </span>{" "}
+            <span className="text-yellow-600 font-semibold">{averageRating} ⭐</span>{" "}
             ({reviews.length} review{reviews.length > 1 ? "s" : ""})
           </div>
 
           <div className="space-y-4">
             {reviews.map((rev) => (
-              <div key={rev._id} className="border text-black rounded p-4 shadow-sm bg-gray-50">
+              <div
+                key={rev._id}
+                className="border text-black rounded p-4 shadow-sm bg-gray-50"
+              >
                 <div className="flex justify-between items-center mb-2">
                   <p className="text-blue-700 font-semibold">
                     {rev.user?.name || "Anonymous"}
@@ -172,8 +187,24 @@ const ReviewForm = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile View: max width, centered */}
+      <div className="block md:hidden min-h-screen w-full max-w-[90vw] mx-auto px-4 py-6 bg-red-100 pt-20">
+        <Content />
+      </div>
+
+      {/* Desktop View: full width */}
+      <div className="hidden md:block min-h-screen w-full px-10 py-6 bg-red-100 pt-20">
+        <Content />
+      </div>
+    </>
   );
 };
 
 export default ReviewForm;
+
+

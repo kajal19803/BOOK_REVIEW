@@ -63,7 +63,7 @@ const AdminDashboard = () => {
       await axios.delete(`${API}/api/books/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchBooks(); 
+      fetchBooks();
     } catch (err) {
       console.error("Delete failed:", err);
     }
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
 
   const handleBookAdded = () => {
     setShowModal(false);
-    fetchBooks(); 
+    fetchBooks();
   };
 
   const resetFilters = () => {
@@ -87,14 +87,24 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, [searchQuery, selectedGenre, selectedRating, selectedLanguage, selectedPages, selectedYear, selectedFeatured, currentPage]);
+  }, [
+    searchQuery,
+    selectedGenre,
+    selectedRating,
+    selectedLanguage,
+    selectedPages,
+    selectedYear,
+    selectedFeatured,
+    currentPage,
+  ]);
 
   return (
-    <div className="px-6 py-8 bg-gray-100 min-h-screen w-full pt-20">
-      <div className="flex justify-between items-center mb-6">
+    <div className="px-4 py-8 bg-gray-100 min-h-screen w-full pt-20 max-w-[1200px] mx-auto">
+      
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h2 className="text-2xl font-bold text-blue-700">📚 Admin Book Manager</h2>
         <button
-          className="bg-white text-black border border-green-600 px-4 py-2 rounded hover:bg-green-100"
+          className="bg-white text-black border border-green-600 px-4 py-2 rounded hover:bg-green-100 w-full sm:w-auto"
           onClick={() => setShowModal(true)}
         >
           ➕ Add New Book
@@ -102,29 +112,37 @@ const AdminDashboard = () => {
       </div>
 
       
-      <div className="bg-white p-4 rounded-lg shadow mb-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="bg-white p-4 rounded-lg shadow mb-6 grid gap-4
+                      grid-cols-1
+                      sm:grid-cols-2
+                      md:grid-cols-3
+                      lg:grid-cols-4">
         <input
           type="text"
           placeholder="🔍 Search title or author"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border px-3 py-2 text-black bg-white rounded text-sm"
+          className="border px-3 py-2 text-black bg-white rounded text-sm w-full"
         />
 
         <select
           value={selectedGenre}
-          onChange={(e) => setSelectedGenre(e.target.value === "All" ? "" : e.target.value)}
-          className="border px-3 text-black bg-white  py-2 rounded text-sm"
+          onChange={(e) =>
+            setSelectedGenre(e.target.value === "All" ? "" : e.target.value)
+          }
+          className="border px-3 text-black bg-white  py-2 rounded text-sm w-full"
         >
           {allGenres.map((genre) => (
-            <option key={genre} value={genre}>{genre}</option>
+            <option key={genre} value={genre}>
+              {genre}
+            </option>
           ))}
         </select>
 
         <select
           value={selectedRating}
           onChange={(e) => setSelectedRating(e.target.value)}
-          className="border text-black bg-white px-3 py-2 rounded text-sm"
+          className="border text-black bg-white px-3 py-2 rounded text-sm w-full"
         >
           <option value="">All Ratings</option>
           <option value="4">4★ & above</option>
@@ -135,7 +153,7 @@ const AdminDashboard = () => {
         <select
           value={selectedLanguage}
           onChange={(e) => setSelectedLanguage(e.target.value)}
-          className="border text-black bg-white px-3 py-2 rounded text-sm"
+          className="border text-black bg-white px-3 py-2 rounded text-sm w-full"
         >
           <option value="">All Languages</option>
           <option value="English">English</option>
@@ -148,7 +166,7 @@ const AdminDashboard = () => {
           placeholder="Min Pages"
           value={selectedPages}
           onChange={(e) => setSelectedPages(e.target.value)}
-          className="border text-black bg-white px-3 py-2 rounded text-sm"
+          className="border text-black bg-white px-3 py-2 rounded text-sm w-full"
         />
 
         <input
@@ -156,29 +174,30 @@ const AdminDashboard = () => {
           placeholder="Published Year"
           value={selectedYear}
           onChange={(e) => setSelectedYear(e.target.value)}
-          className="border text-black bg-white px-3 py-2 rounded text-sm"
+          className="border text-black bg-white px-3 py-2 rounded text-sm w-full"
         />
 
         <select
           value={selectedFeatured}
           onChange={(e) => setSelectedFeatured(e.target.value)}
-          className="border text-black bg-white px-3 py-2 rounded text-sm"
+          className="border text-black bg-white px-3 py-2 rounded text-sm w-full"
         >
           <option value="">Featured?</option>
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
 
-        <div className="flex gap-2">
+        
+        <div className="flex gap-2 w-full">
           <button
             onClick={fetchBooks}
-            className="text-black bg-white  px-3 py-2 rounded text-sm"
+            className="text-black bg-white px-3 py-2 rounded text-sm flex-1"
           >
             🔍 Apply
           </button>
           <button
             onClick={resetFilters}
-            className="bg-gray-300 text-black px-3 py-2 rounded text-sm"
+            className="bg-gray-300 text-black px-3 py-2 rounded text-sm flex-1"
           >
             🔁 Reset
           </button>
@@ -188,18 +207,18 @@ const AdminDashboard = () => {
       
       {books.length > 0 ? (
         <>
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {books.map((book) => (
               <BookCard key={book._id} book={book} onDelete={handleDelete} isAdmin />
             ))}
           </div>
 
           
-          <div className="flex justify-center mt-8 gap-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center mt-8 gap-4">
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
-              className={`px-4 py-2 rounded ${
+              className={`px-4 py-2 rounded w-full sm:w-auto ${
                 currentPage === 1
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-blue-600 text-white hover:bg-blue-700"
@@ -213,7 +232,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded ${
+              className={`px-4 py-2 rounded w-full sm:w-auto ${
                 currentPage === totalPages
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-blue-600 text-white hover:bg-blue-700"
@@ -227,17 +246,11 @@ const AdminDashboard = () => {
         <p className="text-gray-600">No books found.</p>
       )}
 
-     
       {showModal && (
-        <AddBookModal
-          onClose={() => setShowModal(false)}
-          onBookAdded={handleBookAdded}
-        />
+        <AddBookModal onClose={() => setShowModal(false)} onBookAdded={handleBookAdded} />
       )}
     </div>
   );
 };
 
 export default AdminDashboard;
-
-
