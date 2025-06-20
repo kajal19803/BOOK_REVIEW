@@ -3,6 +3,7 @@ import axios from "axios";
 import BookCard from "../components/BookCard";
 import { Typewriter } from "react-simple-typewriter";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -47,11 +48,29 @@ const Home = () => {
         ) : featuredBooks.length === 0 ? (
           <p className="text-center text-gray-500 text-lg">No featured books found.</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {featuredBooks.map((book) => (
-              <BookCard key={book._id} book={book} />
+          <motion.div
+               className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+               initial="hidden"
+               animate="visible"
+               variants={{
+                 hidden: {},
+                 visible: {
+                 transition: { staggerChildren: 0.1 },
+                   },
+                }}
+>
+              {featuredBooks.map((book) => (
+          <motion.div
+               key={book._id}
+               variants={{
+               hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+              }}
+             >
+            <BookCard book={book} />
+          </motion.div>
             ))}
-          </div>
+        </motion.div>
         )}
       </section>
 
