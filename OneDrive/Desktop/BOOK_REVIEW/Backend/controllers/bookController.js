@@ -39,7 +39,7 @@ const getAllBooks = async (req, res) => {
       query.featured = true;
     }
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 12;
+    const limit = parseInt(req.query.limit) || 8;
     const skip = (page - 1) * limit;
 
     const totalBooks = await Book.countDocuments(query);

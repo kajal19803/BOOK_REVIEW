@@ -19,7 +19,7 @@ const BookList = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 12;
+  const limit = 8;
 
   
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -70,7 +70,7 @@ const BookList = () => {
       setBooks(res.data.books || []);
       setTotalPages(Math.ceil(res.data.totalCount / limit));
     } catch (error) {
-      console.error("Error fetching books:", error);
+      console.error ("Error fetching books:", error);
     }
     setLoading(false);
   };
