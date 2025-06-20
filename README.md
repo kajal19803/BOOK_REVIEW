@@ -23,33 +23,19 @@ A full-stack book review platform where users can explore books, submit reviews,
 project-BOOK_REVIEW/
 ├── Frontend/ # React Frontend
 │ ├── components/
-│ │ └── AddBookModal.jsx
-│ │ └── BookCard.jsx
-│ │ └── Footer.jsx
 │ │ └── Navbar.jsx
 │ ├── pages/
-│ │ └── AdminDashboard.jsx
-│ │ └── BookDetail.jsx
-│ │ └── BookList.jsx
 │ │ └── Home.jsx
-│ │ └── ReviewForm.jsx
-│ │ └── UserProfile.jsx
 │ ├── App.jsx
 │ └── main.jsx
 │
 ├── server/ # Express Backend
 │ ├── models/
 │ │ └── Book.js
-│ │ └── Review.js
-│ │ └── User.js
 │ ├── routes/
 │ │ └── bookRoutes.js
-│ │ └── reviewRoutes.js
-│ │ └── userRoutes.js
 │ ├── controllers/
 │ │ └── bookController.js
-│ │ └── reviewController.js
-│ │ └── userController.js
 │ └── server.js
 ---
 ## 🌐 API Routes
