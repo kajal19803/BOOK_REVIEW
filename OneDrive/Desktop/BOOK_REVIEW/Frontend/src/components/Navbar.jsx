@@ -1,176 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 const API = import.meta.env.VITE_API_URL;
-
-const MobileNavbar = ({
-  user,
-  isLoggedIn,
-  handleLogout,
-  showModal,
-  setShowModal,
-  menuOpen,
-  setMenuOpen,
-  setActiveTab,
-  handleChange,
-  formData,
-  activeTab,
-  error,
-  otpSent,
-  setOtpSent,
-  enteredOtp,
-  setEnteredOtp,
-  registeredEmail,
-  verifyOtpHandler,
-  handleLoginSubmit,
-  handleRegisterSubmit,
-}) => {
-  return (
-    <nav className="bg-purple-50 fixed top-0 w-full shadow-md px-4 py-4 flex justify-between items-center z-50 md:hidden">
-      <Link to="/" className="text-2xl font-serif-bold text-purple-600">
-        📚 BookVerse
-      </Link>
-
-      <button
-        className="text-purple-600 focus:outline-none"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle menu"
-      >
-        <svg
-          className="w-6 h-6 leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          viewBox="0 0 24 24"
-        >
-          {menuOpen ? (
-            <path d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path d="M3 12h18M3 6h18M3 18h18" />
-          )}
-        </svg>
-      </button>
-
-      {!isLoggedIn && !menuOpen && (
-        <button
-          onClick={() => setShowModal(true)}
-          className="text-black px-4 py-1.5 rounded leading-none bg-transparent border-none focus:outline-none"
-        >
-          Login / Register
-        </button>
-      )}
-
-      <div
-        className={`flex flex-col gap-6 text-lg absolute top-full left-0 w-full bg-purple-50 px-4 py-4 shadow-md transition-transform duration-300 ease-in-out ${
-          menuOpen ? "translate-y-0" : "-translate-y-[120%]"
-        }`}
-        style={{ zIndex: 999 }}
-      >
-        <Link
-          to="/"
-          onClick={() => setMenuOpen(false)}
-          className="hover:text-black font-medium"
-        >
-          Home
-        </Link>
-        <Link
-          to="/books"
-          onClick={() => setMenuOpen(false)}
-          className="hover:text-black font-medium"
-        >
-          Browse
-        </Link>
-
-        {isLoggedIn && user ? (
-          <>
-            <Link
-              to={user.isAdmin ? "/admin/dashboard" : `/users/${user._id}`}
-              onClick={() => setMenuOpen(false)}
-              className="hover:text-blue-600 font-medium"
-            >
-              My Profile
-            </Link>
-            <button
-              onClick={() => {
-                handleLogout();
-                setMenuOpen(false);
-              }}
-              className="text-red-800 px-3 py-1 rounded text-lg bg-transparent border-none focus:outline-none"
-            >
-              Logout
-            </button>
-          </>
-        ) : null}
-      </div>
-    </nav>
-  );
-};
-
-const DesktopNavbar = ({
-  user,
-  isLoggedIn,
-  handleLogout,
-  setShowModal,
-  setActiveTab,
-  handleChange,
-  formData,
-  activeTab,
-  error,
-  otpSent,
-  setOtpSent,
-  enteredOtp,
-  setEnteredOtp,
-  registeredEmail,
-  verifyOtpHandler,
-  handleLoginSubmit,
-  handleRegisterSubmit,
-}) => {
-  return (
-    <nav className="bg-purple-50 fixed top-0 w-full shadow-md px-10 py-4 flex justify-between items-center z-50 hidden md:flex">
-      <Link to="/" className="text-2xl font-serif-bold text-purple-600">
-        📚 BookVerse
-      </Link>
-
-      <div className="flex gap-6 text-base items-center">
-        <Link to="/" className="hover:text-black font-medium">
-          Home
-        </Link>
-        <Link to="/books" className="hover:text-black font-medium">
-          Browse
-        </Link>
-
-        {isLoggedIn && user ? (
-          <>
-            <Link
-              to={user.isAdmin ? "/admin/dashboard" : `/users/${user._id}`}
-              className="hover:text-blue-600 font-medium"
-            >
-              My Profile
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="text-red-800 px-3 py-1 rounded text-lg bg-transparent border-none focus:outline-none"
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={() => {
-              setShowModal(true);
-              setActiveTab("login");
-            }}
-            className="text-black px-4 py-1.5 rounded leading-none bg-transparent border-none focus:outline-none"
-          >
-            Login / Register
-          </button>
-        )}
-      </div>
-    </nav>
-  );
-};
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -276,50 +107,91 @@ const Navbar = () => {
 
   return (
     <>
-      <MobileNavbar
-        user={user}
-        isLoggedIn={isLoggedIn}
-        handleLogout={handleLogout}
-        showModal={showModal}
-        setShowModal={setShowModal}
-        menuOpen={menuOpen}
-        setMenuOpen={setMenuOpen}
-        setActiveTab={setActiveTab}
-        handleChange={handleChange}
-        formData={formData}
-        activeTab={activeTab}
-        error={error}
-        otpSent={otpSent}
-        setOtpSent={setOtpSent}
-        enteredOtp={enteredOtp}
-        setEnteredOtp={setEnteredOtp}
-        registeredEmail={registeredEmail}
-        verifyOtpHandler={verifyOtpHandler}
-        handleLoginSubmit={handleLoginSubmit}
-        handleRegisterSubmit={handleRegisterSubmit}
-      />
+      <nav className="bg-purple-50 fixed top-0 w-full shadow-md px-4 py-4 flex justify-between items-center z-50">
+        <Link to="/" className="text-2xl font-serif-bold text-purple-600">
+          📚 BookVerse
+        </Link>
 
-      <DesktopNavbar
-        user={user}
-        isLoggedIn={isLoggedIn}
-        handleLogout={handleLogout}
-        setShowModal={setShowModal}
-        setActiveTab={setActiveTab}
-        handleChange={handleChange}
-        formData={formData}
-        activeTab={activeTab}
-        error={error}
-        otpSent={otpSent}
-        setOtpSent={setOtpSent}
-        enteredOtp={enteredOtp}
-        setEnteredOtp={setEnteredOtp}
-        registeredEmail={registeredEmail}
-        verifyOtpHandler={verifyOtpHandler}
-        handleLoginSubmit={handleLoginSubmit}
-        handleRegisterSubmit={handleRegisterSubmit}
-      />
+        
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="text-purple-600 focus:outline-none p-1 bg-transparent  hover:outline-none border-none"
+          aria-label="Toggle menu"
+          style={{ width: "36px", height: "36px" }}
+        >
+          <svg
+            className="w-6 h-6 m-auto block"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            viewBox="0 0 24 24"
+          >
+            {menuOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            )}
+          </svg>
+        </button>
 
-     
+        
+        <div
+          className={`flex flex-col gap-4 absolute top-full right-0 w-48 bg-purple-100 shadow-md rounded-md py-4 px-6 transition-transform duration-300 ease-in-out ${
+            menuOpen ? "translate-y-0" : "-translate-y-[200%]"
+          }`}
+          style={{ zIndex: 999 }}
+        >
+          <Link
+            to="/"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-black font-medium"
+          >
+            Home
+          </Link>
+          <Link
+            to="/books"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-black font-medium"
+          >
+            Browse
+          </Link>
+
+          {isLoggedIn && user ? (
+            <>
+              <Link
+                to={user.isAdmin ? "/admin/dashboard" : `/users/${user._id}`}
+                onClick={() => setMenuOpen(false)}
+                className="hover:text-blue-600 font-medium"
+              >
+                My Profile
+              </Link>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className="text-red-800 px-3 py-1 rounded text-lg bg-transparent border-none focus:outline-none"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => {
+                setShowModal(true);
+                setActiveTab("login");
+                setMenuOpen(false);
+              }}
+              className="text-black px-4 py-1.5 rounded leading-none bg-transparent border-none focus:outline-none text-left"
+            >
+            Login/Register
+            </button>
+          )}
+        </div>
+      </nav>
+
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-purple-100 p-6 rounded-lg shadow-lg w-full max-w-md relative">
@@ -462,5 +334,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
 
