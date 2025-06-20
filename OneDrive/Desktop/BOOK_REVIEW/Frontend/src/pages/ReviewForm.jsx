@@ -14,20 +14,20 @@ const ReviewForm = () => {
   const [success, setSuccess] = useState("");
   const [reviews, setReviews] = useState([]);
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const { data } = await axios.get(`${API}/api/reviews/${id}`);
-        if (data.success) {
-          setReviews(data.reviews);
-        }
-      } catch (error) {
-        console.error("Failed to load reviews", error);
+  const fetchReviews = async () => {
+    try {
+      const { data } = await axios.get(`${API}/api/reviews/${id}`);
+      if (data.success) {
+        setReviews(data.reviews);
       }
-    };
+    } catch (error) {
+      console.error("Failed to load reviews", error);
+    }
+  };
 
+  useEffect(() => {
     if (id) fetchReviews();
-  }, [id, success]);
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +61,9 @@ const ReviewForm = () => {
       setError("");
       setComment("");
       setRating(5);
+
+     
+      fetchReviews();
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
     } finally {
@@ -73,7 +76,7 @@ const ReviewForm = () => {
       ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
       : null;
 
-  // Shared content (book info + form + reviews) in a function to avoid repetition
+  
   const Content = () => (
     <>
       <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">
@@ -192,12 +195,12 @@ const ReviewForm = () => {
 
   return (
     <>
-      {/* Mobile View: max width, centered */}
+     
       <div className="block md:hidden min-h-screen w-full max-w-[90vw] mx-auto px-4 py-6 bg-red-100 pt-20">
         <Content />
       </div>
 
-      {/* Desktop View: full width */}
+      
       <div className="hidden md:block min-h-screen w-full px-10 py-6 bg-red-100 pt-20">
         <Content />
       </div>
@@ -206,5 +209,6 @@ const ReviewForm = () => {
 };
 
 export default ReviewForm;
+
 
 

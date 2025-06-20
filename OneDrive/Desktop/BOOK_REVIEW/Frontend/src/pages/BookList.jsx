@@ -21,7 +21,7 @@ const BookList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 12;
 
-  // State to toggle mobile filter panel
+  
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   useEffect(() => {

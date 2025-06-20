@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import BookCard from "../components/BookCard";
 import { Typewriter } from "react-simple-typewriter";
+import { Link } from "react-router-dom";
+
 const API = import.meta.env.VITE_API_URL;
 
 const Home = () => {
@@ -79,12 +81,12 @@ const Home = () => {
             />
           </p>
         </div>
-        <a
-          href="/books"
-          className="bg-pink-700 text-white px-6 py-2 rounded-lg hover:bg-yellow-300 hover:text-black transition font-semibold"
+        <Link
+           to="/books"
+           className="bg-pink-700 text-white px-6 py-2 rounded-lg hover:bg-yellow-300 hover:text-black transition font-semibold"
         >
-          Browse All Books
-        </a>
+           Browse All Books
+       </Link>
       </section>
     </div>
   );

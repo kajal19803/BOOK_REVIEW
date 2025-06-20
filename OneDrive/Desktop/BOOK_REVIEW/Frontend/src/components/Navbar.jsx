@@ -53,7 +53,7 @@ const Navbar = () => {
       setError("");
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      setMenuOpen(false); 
+      setMenuOpen(false);
       if (res.data.user.isAdmin) {
         navigate("/admin/dashboard");
       } else {
@@ -111,13 +111,12 @@ const Navbar = () => {
       <nav className="bg-purple-50 fixed top-0 w-full shadow-md px-4 md:px-10 py-4 flex justify-between items-center z-50">
         <Link to="/" className="text-2xl font-serif-bold text-purple-600">📚 BookVerse</Link>
 
-        
+       
         <button
           className="md:hidden text-purple-600 focus:outline-none"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
-          
           <svg
             className="w-6 h-6 leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
             fill="none"
@@ -128,12 +127,22 @@ const Navbar = () => {
             viewBox="0 0 24 24"
           >
             {menuOpen ? (
-              <path d="M6 18L18 6M6 6l12 12" /> 
+              <path d="M6 18L18 6M6 6l12 12" />
             ) : (
-              <path d="M3 12h18M3 6h18M3 18h18" /> 
+              <path d="M3 12h18M3 6h18M3 18h18" />
             )}
           </svg>
         </button>
+
+        
+        {!isLoggedIn && (
+          <button
+            onClick={() => setShowModal(true)}
+            className="text-black md:hidden px-4 py-1.5 rounded leading-none bg-transparent border-none focus:outline-none"
+          >
+            Login / Register
+          </button>
+        )}
 
         
         <div
@@ -172,21 +181,10 @@ const Navbar = () => {
                 Logout
               </button>
             </>
-          ) : (
-            <button
-              onClick={() => {
-                setShowModal(true);
-                setMenuOpen(false);
-              }}
-              className="text-black px-4 py-1.5 rounded leading-none p-0 m-0 bg-transparent border-none focus:outline-none"
-            >
-              Login / Register
-            </button>
-          )}
+          ) : null}
         </div>
       </nav>
 
-      
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-purple-100 p-6 rounded-lg shadow-lg w-full max-w-md relative">
@@ -335,3 +333,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
