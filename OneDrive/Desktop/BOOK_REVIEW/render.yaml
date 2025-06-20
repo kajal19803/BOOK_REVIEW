@@ -3,6 +3,7 @@ services:
     name: book-review-frontend
     env: node
     plan: free
+    rootDir: Frontend              
     buildCommand: npm install && npm run build
     startCommand: npx serve -s dist
     staticPublishPath: dist
@@ -10,6 +11,7 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+
 
 
 
