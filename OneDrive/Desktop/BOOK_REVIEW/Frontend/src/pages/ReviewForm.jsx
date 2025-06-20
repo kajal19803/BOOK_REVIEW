@@ -34,7 +34,7 @@ const ReviewForm = () => {
     if (id) fetchReviews();
   }, [id]);
 
-  // Handle form submit
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));

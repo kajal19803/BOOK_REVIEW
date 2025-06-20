@@ -97,7 +97,7 @@ const BookList = () => {
         📚 Browse Books
       </h2>
 
-      {/* Mobile filter toggle bar */}
+      
       <div className="lg:hidden mb-4">
         <button
           onClick={() => setShowMobileFilters((v) => !v)}
@@ -108,7 +108,7 @@ const BookList = () => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Filters sidebar - visible on lg+, or toggled on mobile */}
+       
         <AnimatePresence>
           {(showMobileFilters || window.innerWidth >= 1024) && (
             <motion.div
@@ -238,7 +238,7 @@ const BookList = () => {
           )}
         </AnimatePresence>
 
-        {/* Books grid */}
+        
         <div className="flex-1">
           {loading ? (
             <p className="text-center text-gray-500">⏳ Loading books...</p>
