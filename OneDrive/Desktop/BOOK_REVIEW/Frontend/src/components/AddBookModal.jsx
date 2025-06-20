@@ -61,15 +61,15 @@ const AddBookModal = ({ onClose, onBookAdded }) => {
         {error && <p className="text-red-500 mb-3 text-sm">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="text" name="title" placeholder="Title" value={formData.title} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2" required />
-          <input type="text" name="author" placeholder="Author" value={formData.author} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2" required />
-          <input type="text" name="genre" placeholder="Genre" value={formData.genre} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2" required />
-          <input type="number" name="rating" placeholder="Rating (0-5)" value={formData.rating} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2" min="0" max="5" />
-          <input type="number" name="publishedYear" placeholder="Published Year" value={formData.publishedYear} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2" />
-          <input type="text" name="coverImage" placeholder="Cover Image URL" value={formData.coverImage} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2" />
-          <input type="text" name="language" placeholder="Language" value={formData.language} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2" />
-          <input type="number" name="pages" placeholder="Pages" value={formData.pages} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2" />
-          <textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} className="w-full border bg-white rounded px-3 py-2"></textarea>
+          <input type="text" name="title" placeholder="Title" value={formData.title} onChange={handleChange} className="w-full border text-black bg-white rounded px-3 py-2" required />
+          <input type="text" name="author" placeholder="Author" value={formData.author} onChange={handleChange} className="w-full border text-black bg-white rounded px-3 py-2" required />
+          <input type="text" name="genre" placeholder="Genre" value={formData.genre} onChange={handleChange} className="w-full border text-black bg-white rounded px-3 py-2" required />
+          <input type="number" name="rating" placeholder="Rating (0-5)" value={formData.rating} onChange={handleChange} className="w-full border text-black bg-white rounded px-3 py-2" min="0" max="5" />
+          <input type="number" name="publishedYear" placeholder="Published Year" value={formData.publishedYear} onChange={handleChange} className="w-full border text-black bg-white rounded px-3 py-2" />
+          <input type="text" name="coverImage" placeholder="Cover Image URL" value={formData.coverImage} onChange={handleChange} className="w-full border text-black bg-white rounded px-3 py-2" />
+          <input type="text" name="language" placeholder="Language" value={formData.language} onChange={handleChange} className="w-full border text-black bg-white rounded px-3 py-2" />
+          <input type="number" name="pages" placeholder="Pages" value={formData.pages} onChange={handleChange} className="w-full border bg-white text-black rounded px-3 py-2" />
+          <textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} className="w-full border text-black bg-white rounded px-3 py-2"></textarea>
 
           <div className="flex items-center gap-2">
             <input type="checkbox" name="featured" checked={formData.featured} onChange={handleChange} />
